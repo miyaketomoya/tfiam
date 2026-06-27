@@ -34,6 +34,7 @@ nav:
   - CLI Reference: cli-reference.md
   - How It Works: how-it-works.md
   - Contributing: contributing.md
+  - Development Guide: development.md
 
 markdown_extensions:
   - admonition

@@ -398,7 +398,7 @@ func toActionItems(handler string, h *cfnHandler) []ActionItem {
 	seen := map[string]bool{}
 	var items []ActionItem
 	for _, p := range h.Permissions {
-		if seen[p] {
+		if p == "" || seen[p] {
 			continue
 		}
 		seen[p] = true
