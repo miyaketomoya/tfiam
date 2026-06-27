@@ -310,7 +310,14 @@ func main() {
 	for r := range resultsCh {
 		mapping.Resources[r.tfName] = r.entry
 	}
-	log.Printf("generated mappings for %d resource types", len(mapping.Resources))
+	count := len(mapping.Resources)
+	log.Printf("generated mappings for %d resource types", count)
+
+	// Guard against silently writing an empty file when API calls all fail.
+	// A healthy run should produce well over 100 entries.
+	if count < 50 {
+		log.Fatalf("too few resources generated (%d). CloudFormation API calls may have failed — check the SKIP log lines above.", count)
+	}
 
 	out := marshalMapping(mapping)
 	if *outFile != "" {
