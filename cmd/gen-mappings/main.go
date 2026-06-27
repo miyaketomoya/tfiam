@@ -253,14 +253,19 @@ func confidenceFor(handler, action string) string {
 
 func main() {
 	region := flag.String("region", "us-east-1", "AWS region for CloudFormation API")
-	concurrency := flag.Int("concurrency", 10, "parallel DescribeType requests")
+	concurrency := flag.Int("concurrency", 3, "parallel DescribeType requests")
+	rateMs := flag.Int("rate-ms", 300, "milliseconds to sleep between DescribeType calls (per goroutine)")
 	outFile := flag.String("out", "", "output file path (default: stdout)")
 	flag.Parse()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Minute)
 	defer cancel()
 
-	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(*region))
+	cfg, err := config.LoadDefaultConfig(ctx,
+		config.WithRegion(*region),
+		config.WithRetryMaxAttempts(5),
+		config.WithRetryMode(aws.RetryModeAdaptive),
+	)
 	if err != nil {
 		log.Fatalf("load AWS config: %v", err)
 	}
@@ -289,6 +294,7 @@ func main() {
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
+			time.Sleep(time.Duration(*rateMs) * time.Millisecond)
 			entry, err := describeAndConvert(ctx, cfn, cfnType)
 			if err != nil {
 				log.Printf("SKIP %s: %v", cfnType, err)
