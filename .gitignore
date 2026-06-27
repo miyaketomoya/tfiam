@@ -1,0 +1,12 @@
+# Build output
+tfiam
+/dist/
+
+# Test cache
+/testcache/
+
+# OMC state (operational artifacts, not project files)
+.omc/
+
+# OS
+.DS_Store

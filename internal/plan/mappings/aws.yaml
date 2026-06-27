@@ -1,0 +1,202 @@
+# AWS Resource Type → Required IAM Actions Mapping
+# Source: iann0036/iam-dataset + AWS provider docs
+# Generated: 2026-06-27
+# Version: initial-v1
+
+resources:
+  aws_s3_bucket:
+    create:
+      - action: "s3:CreateBucket"
+        confidence: high
+      - action: "s3:PutBucketTagging"
+        confidence: best-effort
+    update:
+      - action: "s3:PutBucketTagging"
+        confidence: best-effort
+      - action: "s3:PutBucketVersioning"
+        confidence: best-effort
+    delete:
+      - action: "s3:DeleteBucket"
+        confidence: high
+
+  aws_iam_role:
+    create:
+      - action: "iam:CreateRole"
+        confidence: high
+      - action: "iam:TagRole"
+        confidence: best-effort
+    update:
+      - action: "iam:UpdateRole"
+        confidence: high
+      - action: "iam:TagRole"
+        confidence: best-effort
+    delete:
+      - action: "iam:DeleteRole"
+        confidence: high
+
+  aws_iam_policy:
+    create:
+      - action: "iam:CreatePolicy"
+        confidence: high
+    update:
+      - action: "iam:CreatePolicyVersion"
+        confidence: high
+    delete:
+      - action: "iam:DeletePolicy"
+        confidence: high
+
+  aws_iam_role_policy_attachment:
+    create:
+      - action: "iam:AttachRolePolicy"
+        confidence: high
+    delete:
+      - action: "iam:DetachRolePolicy"
+        confidence: high
+
+  aws_lambda_function:
+    create:
+      - action: "lambda:CreateFunction"
+        confidence: high
+      - action: "iam:PassRole"
+        confidence: high
+        passrole: true
+    update:
+      - action: "lambda:UpdateFunctionCode"
+        confidence: best-effort
+      - action: "lambda:UpdateFunctionConfiguration"
+        confidence: best-effort
+      - action: "iam:PassRole"
+        confidence: high
+        passrole: true
+    delete:
+      - action: "lambda:DeleteFunction"
+        confidence: high
+
+  aws_dynamodb_table:
+    create:
+      - action: "dynamodb:CreateTable"
+        confidence: high
+      - action: "dynamodb:TagResource"
+        confidence: best-effort
+    update:
+      - action: "dynamodb:UpdateTable"
+        confidence: high
+    delete:
+      - action: "dynamodb:DeleteTable"
+        confidence: high
+
+  aws_instance:
+    create:
+      - action: "ec2:RunInstances"
+        confidence: high
+      - action: "iam:PassRole"
+        confidence: high
+        passrole: true
+    update:
+      - action: "ec2:ModifyInstanceAttribute"
+        confidence: best-effort
+    delete:
+      - action: "ec2:TerminateInstances"
+        confidence: high
+
+  aws_security_group:
+    create:
+      - action: "ec2:CreateSecurityGroup"
+        confidence: high
+      - action: "ec2:AuthorizeSecurityGroupIngress"
+        confidence: best-effort
+      - action: "ec2:AuthorizeSecurityGroupEgress"
+        confidence: best-effort
+    update:
+      - action: "ec2:AuthorizeSecurityGroupIngress"
+        confidence: best-effort
+      - action: "ec2:RevokeSecurityGroupIngress"
+        confidence: best-effort
+    delete:
+      - action: "ec2:DeleteSecurityGroup"
+        confidence: high
+
+  aws_vpc:
+    create:
+      - action: "ec2:CreateVpc"
+        confidence: high
+      - action: "ec2:ModifyVpcAttribute"
+        confidence: best-effort
+    update:
+      - action: "ec2:ModifyVpcAttribute"
+        confidence: best-effort
+    delete:
+      - action: "ec2:DeleteVpc"
+        confidence: high
+
+  aws_subnet:
+    create:
+      - action: "ec2:CreateSubnet"
+        confidence: high
+    update:
+      - action: "ec2:ModifySubnetAttribute"
+        confidence: best-effort
+    delete:
+      - action: "ec2:DeleteSubnet"
+        confidence: high
+
+  aws_ecr_repository:
+    create:
+      - action: "ecr:CreateRepository"
+        confidence: high
+    update:
+      - action: "ecr:SetRepositoryPolicy"
+        confidence: best-effort
+    delete:
+      - action: "ecr:DeleteRepository"
+        confidence: high
+
+  aws_sqs_queue:
+    create:
+      - action: "sqs:CreateQueue"
+        confidence: high
+    update:
+      - action: "sqs:SetQueueAttributes"
+        confidence: best-effort
+    delete:
+      - action: "sqs:DeleteQueue"
+        confidence: high
+
+  aws_sns_topic:
+    create:
+      - action: "sns:CreateTopic"
+        confidence: high
+    update:
+      - action: "sns:SetTopicAttributes"
+        confidence: best-effort
+    delete:
+      - action: "sns:DeleteTopic"
+        confidence: high
+
+  aws_cloudwatch_log_group:
+    create:
+      - action: "logs:CreateLogGroup"
+        confidence: high
+      - action: "logs:TagLogGroup"
+        confidence: best-effort
+    update:
+      - action: "logs:PutRetentionPolicy"
+        confidence: best-effort
+    delete:
+      - action: "logs:DeleteLogGroup"
+        confidence: high
+
+  aws_kms_key:
+    create:
+      - action: "kms:CreateKey"
+        confidence: high
+      - action: "kms:TagResource"
+        confidence: best-effort
+    update:
+      - action: "kms:UpdateKeyDescription"
+        confidence: best-effort
+      - action: "kms:EnableKeyRotation"
+        confidence: best-effort
+    delete:
+      - action: "kms:ScheduleKeyDeletion"
+        confidence: high
