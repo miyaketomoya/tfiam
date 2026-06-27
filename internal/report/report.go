@@ -45,11 +45,14 @@ type NamingFinding struct {
 
 // Report aggregates all findings from a single tfiam check run.
 type Report struct {
+	requiredTotal  int // total required IAM actions extracted from plan
 	permFindings   []PermFinding
 	namingFindings []NamingFinding
 }
 
-func New() *Report { return &Report{} }
+// New creates a Report. requiredTotal is the count of required IAM actions from the plan
+// (including those that were allowed and produced no finding). Required to calculate coverage.
+func New(requiredTotal int) *Report { return &Report{requiredTotal: requiredTotal} }
 
 func (r *Report) AddPermFindings(f []PermFinding)     { r.permFindings = append(r.permFindings, f...) }
 func (r *Report) AddNamingFindings(f []NamingFinding) { r.namingFindings = append(r.namingFindings, f...) }
@@ -71,10 +74,11 @@ func (r *Report) Render(w io.Writer, format string) int {
 func (r *Report) renderText(w io.Writer) int {
 	exitCode := 0
 
-	// Count perm finding metrics
-	var unknown, total int
+	// Count perm finding metrics.
+	// unknown = actions the source could not evaluate at all.
+	// evaluated = r.requiredTotal - unknown (includes allowed + denied).
+	var unknown int
 	for _, f := range r.permFindings {
-		total++
 		switch f.Decision {
 		case FindingMissing:
 			if f.Confidence == "high" {
@@ -82,11 +86,13 @@ func (r *Report) renderText(w io.Writer) int {
 					f.Action, f.ResourceAddress, f.Confidence, f.Source)
 				exitCode = max(exitCode, 1)
 			} else {
+				// best-effort denied: source evaluated it but with lower confidence → warn, no exit 1
 				fmt.Fprintf(w, "WARNING: %s on %s may be denied (confidence: %s, source: %s)\n",
 					f.Action, f.ResourceAddress, f.Confidence, f.Source)
-				unknown++ // treat best-effort denied as unknown for coverage
+				// Still counts as evaluated (the source returned a decision)
 			}
 		case FindingUnknown:
+			// Source could not evaluate → counts toward unknown, never toward evaluated
 			unknown++
 			if f.Detail != "" {
 				fmt.Fprintf(w, "WARNING: %s on %s — %s\n", f.Action, f.ResourceAddress, f.Detail)
@@ -108,12 +114,13 @@ func (r *Report) renderText(w io.Writer) int {
 	}
 
 	// Coverage / Unknown summary
+	total := r.requiredTotal
 	evaluated := total - unknown
 	if total > 0 && unknown > 0 {
 		fmt.Fprintf(w, "WARNING: %d/%d actions were not evaluated (unknown)\n", unknown, total)
 	}
 
-	// All-Unknown → exit 2
+	// All-Unknown → exit 2 (source has no usable data at all)
 	if total > 0 && evaluated == 0 && exitCode == 0 {
 		fmt.Fprintf(w, "ERROR: 0/%d actions evaluated — permission source has no usable data (unknown for all)\n", total)
 		return 2
@@ -160,9 +167,9 @@ type jsonCoverage struct {
 func (r *Report) renderJSON(w io.Writer) int {
 	out := jsonOutput{}
 
-	var unknown, total int
+	var unknown int
+	total := r.requiredTotal
 	for _, f := range r.permFindings {
-		total++
 		item := jsonPermItem{
 			Action:          f.Action,
 			ResourceAddress: f.ResourceAddress,
@@ -176,8 +183,8 @@ func (r *Report) renderJSON(w io.Writer) int {
 			if f.Confidence == "high" {
 				out.Missing = append(out.Missing, item)
 			} else {
+				// best-effort denied → warning but still evaluated (not unknown)
 				out.Warnings = append(out.Warnings, item)
-				unknown++
 			}
 		case FindingUnknown:
 			out.Warnings = append(out.Warnings, item)

@@ -1,0 +1,12 @@
+principal: "arn:aws:iam::123456789012:role/deployer"
+generated_at: "2026-06-27T00:00:00Z"
+decisions:
+  - action: "s3:CreateBucket"
+    resource: "*"
+    decision: "allowed"
+  - action: "s3:PutBucketTagging"
+    resource: "*"
+    decision: "allowed"
+  - action: "s3:DeleteBucket"
+    resource: "*"
+    decision: "allowed"

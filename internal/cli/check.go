@@ -47,7 +47,7 @@ func runCheck(ctx context.Context, gf *GlobalFlags, planPath string) error {
 		return ExitError(2)
 	}
 
-	rep := report.New()
+	rep := report.New(len(required))
 
 	// Check naming violations
 	validator := naming.NewValidator()
