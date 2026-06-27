@@ -1,0 +1,27 @@
+{
+  "format_version": "1.2",
+  "resource_changes": [
+    {
+      "address": "aws_lambda_function.handler",
+      "module_address": "",
+      "mode": "managed",
+      "type": "aws_lambda_function",
+      "name": "handler",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "function_name": "my-handler",
+          "role": "arn:aws:iam::123456789012:role/lambda-exec",
+          "runtime": "python3.12",
+          "handler": "index.handler"
+        },
+        "after_unknown": {
+          "arn": true,
+          "id": true
+        }
+      }
+    }
+  ]
+}
