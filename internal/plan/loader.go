@@ -57,10 +57,6 @@ func loadViaTerraform(ctx context.Context, path string) (*tfjson.Plan, error) {
 	cmd := exec.CommandContext(ctx, tfBin, "show", "-json", path)
 	out, err := cmd.Output()
 	if err != nil {
-		var ee *exec.ExitError
-		if ok := false; !ok {
-			_ = ee
-		}
 		return nil, fmt.Errorf("terraform show -json failed: %w", err)
 	}
 

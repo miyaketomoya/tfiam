@@ -2,6 +2,7 @@ package naming
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 
 	tfjson "github.com/hashicorp/terraform-json"
@@ -37,15 +38,7 @@ func makePlan(resourceType, address string, after map[string]interface{}, afterU
 }
 
 func TestValidator_S3NameTooLong(t *testing.T) {
-	longName := "a" + string(make([]byte, 63)) // 64 chars
-	for i := range longName {
-		_ = i
-	}
-	// Create a 64-char lowercase bucket name
-	name := ""
-	for i := 0; i < 64; i++ {
-		name += "a"
-	}
+	name := strings.Repeat("a", 64)
 
 	p := makePlan("aws_s3_bucket", "aws_s3_bucket.too_long", map[string]interface{}{
 		"bucket": name,

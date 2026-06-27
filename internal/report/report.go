@@ -226,13 +226,6 @@ func (r *Report) renderJSON(w io.Writer) int {
 
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	_ = enc.Encode(out)
+	enc.Encode(out) //nolint:errcheck // write-to-stdout failure is unrecoverable
 	return exitCode
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
