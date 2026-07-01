@@ -1,6 +1,6 @@
 # AWS Resource Type → Required IAM Actions Mapping
 # Source: AWS CloudFormation Resource Provider Schemas
-# Generated: 2026-06-27
+# Generated: 2026-07-01
 # Do not edit by hand — regenerate with: go run ./cmd/gen-mappings --out internal/plan/mappings/aws.yaml
 
 resources:
@@ -6453,6 +6453,103 @@ resources:
         confidence: best-effort
       - action: acm:PutAccountConfiguration
         confidence: best-effort
+  aws_certificatemanager_acmedomainvalidation:
+    create:
+      - action: acm:CreateAcmeDomainValidation
+        confidence: high
+      - action: acm:DescribeAcmeDomainValidation
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+      - action: route53:ChangeResourceRecordSets
+        confidence: best-effort
+      - action: route53:GetChange
+        confidence: best-effort
+      - action: route53:GetHostedZone
+        confidence: best-effort
+    update:
+      - action: acm:UpdateAcmeDomainValidation
+        confidence: high
+      - action: acm:DescribeAcmeDomainValidation
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+      - action: acm:UntagResource
+        confidence: best-effort
+      - action: route53:ChangeResourceRecordSets
+        confidence: best-effort
+      - action: route53:GetChange
+        confidence: best-effort
+      - action: route53:GetHostedZone
+        confidence: best-effort
+    delete:
+      - action: acm:DeleteAcmeDomainValidation
+        confidence: high
+      - action: acm:DescribeAcmeDomainValidation
+        confidence: best-effort
+      - action: route53:ChangeResourceRecordSets
+        confidence: best-effort
+      - action: route53:GetChange
+        confidence: best-effort
+      - action: route53:GetHostedZone
+        confidence: best-effort
+  aws_certificatemanager_acmeendpoint:
+    create:
+      - action: acm:CreateAcmeEndpoint
+        confidence: high
+      - action: acm:DescribeAcmeEndpoint
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+    update:
+      - action: acm:UpdateAcmeEndpoint
+        confidence: high
+      - action: acm:DescribeAcmeEndpoint
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+      - action: acm:UntagResource
+        confidence: best-effort
+    delete:
+      - action: acm:DeleteAcmeEndpoint
+        confidence: high
+      - action: acm:DescribeAcmeEndpoint
+        confidence: best-effort
+  aws_certificatemanager_acmeexternalaccountbinding:
+    create:
+      - action: acm:CreateAcmeExternalAccountBinding
+        confidence: high
+      - action: iam:PassRole
+        confidence: high
+        passrole: true
+      - action: acm:DescribeAcmeExternalAccountBinding
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+    update:
+      - action: acm:DescribeAcmeExternalAccountBinding
+        confidence: best-effort
+      - action: acm:ListTagsForResource
+        confidence: best-effort
+      - action: acm:TagResource
+        confidence: best-effort
+      - action: acm:UntagResource
+        confidence: best-effort
+    delete:
+      - action: acm:DeleteAcmeExternalAccountBinding
+        confidence: high
+      - action: acm:DescribeAcmeExternalAccountBinding
+        confidence: best-effort
   aws_chatbot_customaction:
     create:
       - action: chatbot:CreateCustomAction
@@ -7338,9 +7435,6 @@ resources:
         confidence: best-effort
     update:
       - action: cloudformation:SetTypeDefaultVersion
-        confidence: best-effort
-    delete:
-      - action: ""
         confidence: best-effort
   aws_cloudformation_resourceversion:
     create:
@@ -9715,6 +9809,30 @@ resources:
         confidence: best-effort
       - action: organizations:ListDelegatedAdministrators
         confidence: best-effort
+  aws_config_remediationconfiguration:
+    create:
+      - action: iam:CreateServiceLinkedRole
+        confidence: high
+      - action: iam:PassRole
+        confidence: high
+        passrole: true
+      - action: config:DescribeRemediationConfigurations
+        confidence: best-effort
+      - action: config:PutRemediationConfigurations
+        confidence: best-effort
+    update:
+      - action: iam:PassRole
+        confidence: high
+        passrole: true
+      - action: config:DescribeRemediationConfigurations
+        confidence: best-effort
+      - action: config:PutRemediationConfigurations
+        confidence: best-effort
+      - action: iam:CreateServiceLinkedRole
+        confidence: best-effort
+    delete:
+      - action: config:DeleteRemediationConfiguration
+        confidence: high
   aws_config_storedquery:
     create:
       - action: config:GetStoredQuery
@@ -17584,6 +17702,10 @@ resources:
       - action: ecs:DescribeExpressGatewayService
         confidence: best-effort
       - action: ecs:DescribeServiceDeployments
+        confidence: best-effort
+      - action: ecs:DescribeServiceRevisions
+        confidence: best-effort
+      - action: ecs:DescribeServices
         confidence: best-effort
       - action: ecs:ListServiceDeployments
         confidence: best-effort
@@ -26927,13 +27049,9 @@ resources:
         confidence: best-effort
       - action: kms:Decrypt
         confidence: best-effort
-      - action: kms:DescribeKey
-        confidence: best-effort
       - action: kms:Encrypt
         confidence: best-effort
       - action: kms:GenerateDataKey
-        confidence: best-effort
-      - action: kms:GenerateDataKeyWithoutPlaintext
         confidence: best-effort
       - action: lambda:GetCodeSigningConfig
         confidence: best-effort
@@ -26985,11 +27103,7 @@ resources:
         confidence: best-effort
       - action: kms:Decrypt
         confidence: best-effort
-      - action: kms:DescribeKey
-        confidence: best-effort
       - action: kms:GenerateDataKey
-        confidence: best-effort
-      - action: kms:GenerateDataKeyWithoutPlaintext
         confidence: best-effort
       - action: lambda:DeleteFunctionCodeSigningConfig
         confidence: best-effort
@@ -33873,6 +33987,8 @@ resources:
         confidence: best-effort
       - action: aoss:BatchGetCollection
         confidence: best-effort
+      - action: aoss:TagResource
+        confidence: best-effort
       - action: kms:DescribeKey
         confidence: best-effort
     update:
@@ -34264,6 +34380,8 @@ resources:
       - action: organizations:DeletePolicy
         confidence: high
       - action: organizations:DetachPolicy
+        confidence: best-effort
+      - action: organizations:ListTargetsForPolicy
         confidence: best-effort
   aws_organizations_resourcepolicy:
     create:
@@ -36345,6 +36463,32 @@ resources:
     delete:
       - action: quicksight:DeleteFolder
         confidence: high
+  aws_quicksight_oauthclientapplication:
+    create:
+      - action: quicksight:CreateOAuthClientApplication
+        confidence: high
+      - action: quicksight:DescribeOAuthClientApplication
+        confidence: best-effort
+      - action: quicksight:ListTagsForResource
+        confidence: best-effort
+      - action: quicksight:TagResource
+        confidence: best-effort
+    update:
+      - action: quicksight:UpdateOAuthClientApplication
+        confidence: high
+      - action: quicksight:DescribeOAuthClientApplication
+        confidence: best-effort
+      - action: quicksight:ListTagsForResource
+        confidence: best-effort
+      - action: quicksight:TagResource
+        confidence: best-effort
+      - action: quicksight:UntagResource
+        confidence: best-effort
+    delete:
+      - action: quicksight:DeleteOAuthClientApplication
+        confidence: high
+      - action: quicksight:DescribeOAuthClientApplication
+        confidence: best-effort
   aws_quicksight_refreshschedule:
     create:
       - action: quicksight:CreateRefreshSchedule
@@ -42818,6 +42962,68 @@ resources:
         confidence: best-effort
       - action: securityagent:BatchGetPentests
         confidence: best-effort
+  aws_securityagent_securityrequirementpack:
+    create:
+      - action: securityagent:CreateSecurityRequirementPack
+        confidence: high
+      - action: kms:Decrypt
+        confidence: best-effort
+      - action: kms:DescribeKey
+        confidence: best-effort
+      - action: kms:Encrypt
+        confidence: best-effort
+      - action: kms:GenerateDataKeyWithoutPlaintext
+        confidence: best-effort
+      - action: kms:ReEncryptFrom
+        confidence: best-effort
+      - action: kms:ReEncryptTo
+        confidence: best-effort
+      - action: securityagent:BatchCreateSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:BatchGetSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:GetSecurityRequirementPack
+        confidence: best-effort
+      - action: securityagent:ListSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:ListTagsForResource
+        confidence: best-effort
+      - action: securityagent:TagResource
+        confidence: best-effort
+    update:
+      - action: securityagent:UpdateSecurityRequirementPack
+        confidence: high
+      - action: kms:Decrypt
+        confidence: best-effort
+      - action: securityagent:BatchCreateSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:BatchDeleteSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:BatchGetSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:BatchUpdateSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:GetSecurityRequirementPack
+        confidence: best-effort
+      - action: securityagent:ListSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:ListTagsForResource
+        confidence: best-effort
+      - action: securityagent:TagResource
+        confidence: best-effort
+      - action: securityagent:UntagResource
+        confidence: best-effort
+    delete:
+      - action: securityagent:DeleteSecurityRequirementPack
+        confidence: high
+      - action: kms:Decrypt
+        confidence: best-effort
+      - action: securityagent:BatchDeleteSecurityRequirements
+        confidence: best-effort
+      - action: securityagent:GetSecurityRequirementPack
+        confidence: best-effort
+      - action: securityagent:ListSecurityRequirements
+        confidence: best-effort
   aws_securityagent_targetdomain:
     create:
       - action: securityagent:CreateTargetDomain
@@ -43367,6 +43573,8 @@ resources:
         confidence: best-effort
       - action: iam:GetRole
         confidence: best-effort
+      - action: iam:ListAttachedRolePolicies
+        confidence: best-effort
       - action: iam:ListRolePolicies
         confidence: best-effort
       - action: iam:PutRolePolicy
@@ -43421,6 +43629,8 @@ resources:
       - action: glue:GetTable
         confidence: best-effort
       - action: iam:GetRole
+        confidence: best-effort
+      - action: iam:ListAttachedRolePolicies
         confidence: best-effort
       - action: iam:ListRolePolicies
         confidence: best-effort
