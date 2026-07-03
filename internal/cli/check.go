@@ -7,6 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/tfiam-dev/tfiam/internal/awsctx"
+	"github.com/tfiam-dev/tfiam/internal/deepcheck"
+	"github.com/tfiam-dev/tfiam/internal/escalation"
 	"github.com/tfiam-dev/tfiam/internal/iam"
 	"github.com/tfiam-dev/tfiam/internal/naming"
 	"github.com/tfiam-dev/tfiam/internal/plan"
@@ -79,6 +81,33 @@ func runCheck(ctx context.Context, gf *GlobalFlags, planPath string) error {
 
 	// Render report
 	exitCode := rep.Render(os.Stdout, gf.Format)
+
+	// B: suggest-policy — print minimal IAM policy covering all missing actions
+	if gf.SuggestPolicy {
+		rep.SuggestPolicy(os.Stdout)
+	}
+
+	// C: deep-check — detect naming conflicts via live AWS API calls
+	if gf.DeepCheck {
+		dc, err := deepcheck.NewChecker(ctx)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: deep-check unavailable: %v\n", err)
+		} else {
+			for _, f := range dc.Check(ctx, tfPlan) {
+				fmt.Fprintf(os.Stdout, "CONFLICT: %s — %s\n", f.ResourceAddress, f.Detail)
+				exitCode = max(exitCode, 1)
+			}
+		}
+	}
+
+	// D: escalation detection — static analysis, always runs
+	for _, f := range escalation.Detect(tfPlan) {
+		fmt.Fprintf(os.Stdout, "ESCALATION [%s]: %s — %s\n", f.Risk, f.ResourceAddress, f.Detail)
+		if f.Risk == escalation.RiskHigh && gf.EscalationCheck {
+			exitCode = max(exitCode, 1)
+		}
+	}
+
 	if exitCode != 0 {
 		return ExitError(exitCode)
 	}

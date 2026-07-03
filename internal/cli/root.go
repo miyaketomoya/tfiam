@@ -12,6 +12,8 @@ type GlobalFlags struct {
 	DeepCheck        bool
 	Format           string
 	NoCloud          bool
+	SuggestPolicy    bool
+	EscalationCheck  bool
 }
 
 func NewRootCmd() *cobra.Command {
@@ -36,6 +38,8 @@ Workflow:
 	root.PersistentFlags().BoolVar(&gf.DeepCheck, "deep-check", false, "Enable cloud-based naming conflict checks (requires AWS access)")
 	root.PersistentFlags().StringVar(&gf.Format, "format", "text", "Output format: text or json")
 	root.PersistentFlags().BoolVar(&gf.NoCloud, "no-cloud", false, "Disable all cloud access; only static checks run")
+	root.PersistentFlags().BoolVar(&gf.SuggestPolicy, "suggest-policy", false, "Print a minimal IAM policy JSON covering all missing permissions")
+	root.PersistentFlags().BoolVar(&gf.EscalationCheck, "escalation-check", false, "Exit 1 when HIGH-risk privilege escalation patterns are detected")
 
 	root.AddCommand(newCheckCmd(gf))
 
